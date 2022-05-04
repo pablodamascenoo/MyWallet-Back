@@ -4,6 +4,7 @@ import chalk from "chalk";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import Joi from "joi";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -20,9 +21,41 @@ const mongoClient = new MongoClient(MONGO_URI);
 mongoClient
   .connect()
   .then(() => {
-    console.log("connected");
+    db = mongoClient.db("MyWallet");
   })
   .catch((error) => console.log(error));
+
+app.post("/cadastro", async (req, res) => {
+  const { email, password } = req.body;
+  const passwordEncrypted = bcrypt.hashSync(password, 10);
+
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(3).max(30).required(),
+  });
+
+  const { error } = schema.validate({ email, password }, { abortEarly: false });
+
+  if (error) {
+    console.log(chalk.yellow.bold(error));
+    res.sendStatus(422);
+    return;
+  }
+
+  try {
+    if (await db.collection("users").findOne({ email })) {
+      res.sendStatus(409);
+      return;
+    }
+    await db.collection("users").insertOne({
+      email,
+      password: passwordEncrypted,
+    });
+    res.sendStatus(201);
+  } catch (error) {
+    console.log(chalk.bold.red(`${error} on /cadastro route`));
+  }
+});
 
 app.listen(
   PORT,
