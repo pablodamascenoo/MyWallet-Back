@@ -63,7 +63,23 @@ app.post("/cadastro", async (req, res) => {
     });
     res.sendStatus(201);
   } catch (error) {
-    console.log(chalk.bold.red(`${error} on /cadastro route`));
+    console.log(chalk.bold.red(`${error} at /cadastro route`));
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await db.collection("users").findOne({ email });
+    if (user && bcrypt.compareSync(password, user.password)) {
+      res.sendStatus(200);
+      return;
+    } else {
+      res.sendStatus(422);
+    }
+  } catch (error) {
+    console.log(chalk.bold.red(`${error} at /login route`));
   }
 });
 
