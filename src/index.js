@@ -26,15 +26,24 @@ mongoClient
   .catch((error) => console.log(error));
 
 app.post("/cadastro", async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password, rePassword } = req.body;
   const passwordEncrypted = bcrypt.hashSync(password, 10);
 
   const schema = Joi.object({
+    name: Joi.string().alphanum().min(3).max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(3).max(30).required(),
+    rePassword: Joi.string()
+      .required()
+      .valid(Joi.ref("password"))
+      .label("Confirm password")
+      .messages({ "any.only": "{{#label}} does not match" }),
   });
 
-  const { error } = schema.validate({ email, password }, { abortEarly: false });
+  const { error } = schema.validate(
+    { name, email, password, rePassword },
+    { abortEarly: false }
+  );
 
   if (error) {
     console.log(chalk.yellow.bold(error));
@@ -48,6 +57,7 @@ app.post("/cadastro", async (req, res) => {
       return;
     }
     await db.collection("users").insertOne({
+      name,
       email,
       password: passwordEncrypted,
     });
