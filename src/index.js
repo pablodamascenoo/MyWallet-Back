@@ -6,24 +6,15 @@ import { MongoClient } from "mongodb";
 import Joi from "joi";
 import bcrypt from "bcrypt";
 
+import db from "./db.js";
+
 dotenv.config();
 
 const PORT = process.env.PORT;
-const MONGO_URI = process.env.MONGO_URI;
 
 const app = express();
 app.use(cors());
 app.use(json());
-
-let db;
-const mongoClient = new MongoClient(MONGO_URI);
-
-mongoClient
-  .connect()
-  .then(() => {
-    db = mongoClient.db("MyWallet");
-  })
-  .catch((error) => console.log(error));
 
 app.post("/cadastro", async (req, res) => {
   const { name, email, password, repassword } = req.body;
