@@ -43,6 +43,7 @@ export async function register(req, res) {
     res.sendStatus(201);
   } catch (error) {
     console.log(chalk.bold.red(`${error} at /cadastro route`));
+    res.sendStatus(500);
   }
 }
 
@@ -76,5 +77,6 @@ export async function login(req, res) {
     }
   } catch (error) {
     console.log(chalk.bold.red(`${error} at /login route`));
+    res.sendStatus(500);
   }
 }
