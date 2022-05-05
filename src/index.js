@@ -4,7 +4,7 @@ import chalk from "chalk";
 import dotenv from "dotenv";
 
 import { login, register } from "./controllers/authController.js";
-import { getBalance } from "./controllers/balanceController.js";
+import { getBalance, postValue } from "./controllers/balanceController.js";
 
 dotenv.config();
 
@@ -19,6 +19,8 @@ app.post("/cadastro", register);
 app.post("/login", login);
 
 app.get("/balance", getBalance);
+
+app.post("/balance", postValue);
 
 app.listen(
   PORT,
