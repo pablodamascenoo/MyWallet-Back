@@ -20,14 +20,14 @@ export async function getBalance(req, res) {
 
     if (!user) return res.sendStatus(401);
 
-    const balance = await db
+    let balance = await db
       .collection("balance")
       .find({
         userId: user._id,
       })
       .toArray();
 
-    console.log(balance);
+    delete balance.userId;
 
     res.send(balance).status(200);
   } catch (error) {

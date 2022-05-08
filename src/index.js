@@ -3,8 +3,8 @@ import cors from "cors";
 import chalk from "chalk";
 import dotenv from "dotenv";
 
-import { login, register } from "./controllers/authController.js";
-import { getBalance, postValue } from "./controllers/balanceController.js";
+import authRouter from "./routes/authRouter.js";
+import balanceRouter from "./routes/balanceRouter.js";
 
 dotenv.config();
 
@@ -14,13 +14,10 @@ const app = express();
 app.use(cors());
 app.use(json());
 
-app.post("/cadastro", register);
+const router = express.Router();
 
-app.post("/login", login);
-
-app.get("/balance", getBalance);
-
-app.post("/balance", postValue);
+router.use(authRouter);
+router.use(balanceRouter);
 
 app.listen(
   PORT,
@@ -30,3 +27,5 @@ app.listen(
   `)
   )
 );
+
+export default router;

@@ -70,7 +70,7 @@ export async function login(req, res) {
         token,
       });
 
-      res.send(token).status(200);
+      res.send({ token, name: user.name }).status(200);
       return;
     } else {
       res.sendStatus(401);
