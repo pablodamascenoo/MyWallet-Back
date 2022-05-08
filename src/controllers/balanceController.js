@@ -13,14 +13,14 @@ export async function getBalance(req, res) {
       _id: session.userId,
     });
 
-    let balance = await db
+    const balance = await db
       .collection("balance")
       .find({
         userId: user._id,
       })
       .toArray();
 
-    delete balance.userId;
+    balance.forEach((value) => delete value.userId);
 
     res.send(balance).status(200);
   } catch (error) {
