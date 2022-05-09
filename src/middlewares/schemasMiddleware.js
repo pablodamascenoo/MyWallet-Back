@@ -19,7 +19,7 @@ export async function transactionSchema(req, res, next) {
 
   if (error) {
     console.log(chalk.bold.yellow(error));
-    return res.send(error).status(422);
+    return res.status(422).send(error);
   }
 
   next();
@@ -46,7 +46,7 @@ export async function registerSchema(req, res, next) {
 
   if (error) {
     console.log(chalk.yellow.bold(error));
-    res.send(error).status(422);
+    res.status(422).send(error);
     return;
   }
 
@@ -64,8 +64,8 @@ export async function loginSchema(req, res, next) {
   const { error } = schema.validate({ email, password }, { abortEarly: false });
 
   if (error) {
-    res.send(error).status(422);
-    return console.log(chalk.bold.yellow(error));
+    console.log(chalk.bold.yellow(error));
+    return res.status(422).send(error);
   }
 
   next();

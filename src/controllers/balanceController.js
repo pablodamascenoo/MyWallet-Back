@@ -22,7 +22,7 @@ export async function getBalance(req, res) {
 
     balance.forEach((value) => delete value.userId);
 
-    res.send(balance).status(200);
+    res.status(200).send(balance);
   } catch (error) {
     console.log(chalk.bold.red(`${error} at get /balance`));
   }
