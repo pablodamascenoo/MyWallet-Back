@@ -10,7 +10,7 @@ export async function register(req, res) {
   try {
     const passwordEncrypted = bcrypt.hashSync(password, 10);
     if (await db.collection("users").findOne({ email })) {
-      res.sendStatus(409);
+      res.send("email já cadastrado").status(409);
       return;
     }
     await db.collection("users").insertOne({
@@ -21,7 +21,7 @@ export async function register(req, res) {
     res.sendStatus(201);
   } catch (error) {
     console.log(chalk.bold.red(`${error} at /cadastro route`));
-    res.sendStatus(500);
+    res.send("Erro interno no Servidor").status(500);
   }
 }
 
@@ -40,10 +40,11 @@ export async function login(req, res) {
       res.send({ token, name: user.name }).status(200);
       return;
     } else {
-      res.sendStatus(401);
+      res.send("email e/ou senha incorretos").status(401);
+      return;
     }
   } catch (error) {
     console.log(chalk.bold.red(`${error} at /login route`));
-    res.sendStatus(500);
+    res.send("Erro interno no servidor").status(500);
   }
 }
